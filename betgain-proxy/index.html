@@ -1,152 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Betgain</title>
+<style>
+:root{--bg:#17181b;--card:#222327;--tx:#f1f1f3;--mu:#a3a4ad;--line:#34353b;--soft:#2e1518;--pri:#b4121b;--pri2:#7d0a11;--hi:#ff5757;--ink:#1d1e21;--odd:#2b2c31;--ok:#1f9d63;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 "Outfit","Segoe UI",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+header.top{background:#fff;color:#1d1e21;border-bottom:4px solid var(--pri);display:flex;align-items:center;gap:22px;padding:0 24px;height:62px;position:sticky;top:0;z-index:5}
+.logo{display:flex;align-items:center}.logo img{height:38px;width:auto;display:block}
+.logo i{width:26px;height:26px;background:var(--pri);border-radius:7px 14px 7px 14px;display:inline-block}
+nav.nav{display:flex;gap:4px;overflow-x:auto}
+nav.nav button{padding:8px 14px;border-radius:8px;color:#3a3b40;font-weight:600;white-space:nowrap}
+nav.nav button.on{background:var(--pri);color:#fff}
+nav.nav button:hover:not(.on){background:#efeff1}
+.wal{margin-left:auto;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.wal b{background:#efeff1;color:#1d1e21;padding:7px 14px;border-radius:8px}
+.wal .av{width:34px;height:34px;border-radius:50%;background:var(--pri);display:grid;place-items:center;font-weight:700}
+.wrap{max-width:1320px;margin:0 auto;padding:20px 24px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.hero{background:linear-gradient(115deg,#3b0508,#7d0a11 55%,#b4121b);color:#fff;border-radius:18px;padding:22px 26px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.hero small{opacity:.85}
+.hero h1{margin:4px 0 10px;font-size:30px;letter-spacing:-.5px;line-height:1.1}
+.hero .odds3{display:flex;gap:8px}
+.hero .odds3 button{background:rgba(255,255,255,.16);border-radius:10px;padding:9px 18px;font-weight:700;transition:background .15s}
+.hero .odds3 button:hover{background:rgba(255,255,255,.28)}
+.hero .odds3 button.sel{background:#fff;color:var(--pri2)}
+.hero .odds3 span{display:block;font-size:11px;font-weight:500;opacity:.8}
+.score{font-size:44px;font-weight:800;text-align:center;line-height:1}
+.score small{display:block;font-size:12px;font-weight:500;margin-top:6px}
+.cats{display:flex;gap:10px;overflow-x:auto;padding:16px 0 4px}
+.cat{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 14px;white-space:nowrap;font-weight:600}
+.cat.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.sec{display:flex;align-items:baseline;gap:12px;margin:26px 0 10px}
+.sec h2{margin:0;font-size:22px;letter-spacing:-.3px}
+.sec a{margin-left:auto;color:var(--hi);font-weight:600;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.card{background:var(--card);border-radius:14px;border-left:5px solid var(--pri);padding:14px 16px}
+.card .meta{display:flex;justify-content:space-between;color:var(--mu);font-size:12.5px;margin-bottom:10px}
+.live{color:var(--hi);font-weight:700;display:flex;align-items:center;gap:6px}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pri);animation:p 1.4s infinite}
+@keyframes p{50%{opacity:.25}}
+.tm{display:flex;justify-content:space-between;font-weight:600;padding:2px 0}
+.tm span:last-child{font-variant-numeric:tabular-nums}
+.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.odds.two{grid-template-columns:repeat(2,1fr)}
+.odd{background:var(--odd);border-radius:9px;padding:7px 4px;text-align:center;font-weight:700;font-size:16px;transition:background .15s,color .15s;border:1px solid transparent}
+.odd span{display:block;font-size:11px;font-weight:500;color:var(--mu)}
+.odd:hover:not(:disabled){border-color:var(--pri)}
+.odd.sel{background:var(--pri);color:#fff}.odd.sel span{color:#ffd0d0}
+.odd:disabled{opacity:.45;cursor:not-allowed}
+aside.slip{position:sticky;top:82px}
+.panel{background:var(--card);border-radius:16px;overflow:hidden}
+.panel header{background:var(--soft);padding:14px 16px;display:flex;justify-content:space-between;font-weight:700}
+.panel header span{color:var(--hi)}
+.in{padding:16px}
+.empty{text-align:center;padding:26px 0;color:var(--mu)}
+.empty b{display:block;color:var(--tx);font-size:18px;margin-bottom:4px}
+.si{border-bottom:1px dashed var(--line);padding:10px 0;font-size:13.5px}
+.si b{display:flex;justify-content:space-between}
+.si small{color:var(--mu)}
+.rm{color:var(--mu);font-size:18px;margin-left:6px}
+.stake input{width:100%;border:1px solid var(--line);background:var(--odd);color:var(--tx);border-radius:10px;padding:11px;font:inherit;margin-top:12px}
+.sum{display:flex;justify-content:space-between;margin-top:10px;font-weight:600}
+.place{width:100%;margin-top:12px;background:var(--pri);color:#fff;font-weight:700;padding:13px;border-radius:10px}
+.place:hover{background:var(--pri2)}
+.msg{margin:10px 0 0;font-size:13px;color:var(--mu)}
+.demo{padding:0 16px 14px;margin:0;font-size:12px;color:var(--mu)}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}aside.slip{position:static}.wal b{display:none}}
+@media(max-width:640px){header.top{gap:10px;padding:0 12px}.logo span{display:none}.hero{grid-template-columns:1fr}.hero h1{font-size:24px}.wrap{padding:14px 12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAAACoCAYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYAYACYACYACYACYACYACYACYACYACYACYAYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYACYATESAAEA8M0tAZ3bQAAIUBiAAAAAAADt5jD1fIHAAA4V3Vp16158c580f4afc" alt="Betgain"></div>
+ <nav class="nav"><button class="on">Início</button><button>Ao vivo</button><button>Agenda</button><button>E-sports</button><button>Minhas apostas</button></nav>
+ <div class="wal"><b id="bal"></b><div class="av">AL</div></div>
+</header>
+
+<div class="wrap">
+ <main>
+  <section class="hero" aria-label="Jogo em destaque">
+   <div>
+    <small>Destaque do dia • Ao vivo</small>
+    <h1 id="hero-title">A carregar jogo em destaque...</h1>
+    <div class="odds3" id="hero"></div>
+   </div>
+   <div class="score" id="hero-score">2 – 1<small>Em direto</small></div>
+  </section>
+
+  <div class="cats" id="cats"></div>
+
+  <div class="sec"><h2>A decorrer agora</h2><a>Ver todos</a></div>
+  <div class="grid" id="live"></div>
+
+  <div class="sec"><h2>Começa em breve</h2><a>Ver agenda</a></div>
+  <div class="grid" id="next"></div>
+
+  <div class="sec"><h2>E-sports</h2><a>Ver todos</a></div>
+  <div class="grid" id="esp"></div>
+ </main>
+
+ <aside class="slip">
+  <div class="panel" aria-live="polite">
+   <header>Meu bilhete <span id="n"></span></header>
+   <div class="in" id="slip"></div>
+   <p class="demo">Demonstração visual: odds em tempo real e saldo de teste. Nenhum dinheiro real.</p>
+  </div>
+ </aside>
+</div>
+
 <script>
 // =========================================================================
-// CONFIGURAÇÃO DO SEU PROXY DA VERCEL
+// ROTA INTERNA DO PROXY VERCEL
 // =========================================================================
-// Substitua pelo URL da sua função implantada na Vercel:
-const PROXY_URL = "/api/odds";
+const PROXY_URL = "/api/odds"; 
 
 var D = {
   cats: ["⚽ Futebol", "🏀 Basquete", "🎾 Tênis", "🥊 Lutas", "🎮 E-sports", "🏉 Rugby", "🏐 Vôlei", "🏎️ Automobilismo"],
-  hero: { a: ["A carregar..."], b: ["A carregar..."], o: [null, null, null] },
+  hero: { a: ["Carregando..."], b: ["Carregando..."], o: [null, null, null] },
   live: [],
   next: [],
   esp: []
 };
 
-var bal = 8, sel = {}, msg = "", tot = 1;
-var $ = function(i){return document.getElementById(i)};
-function fmt(n){return (n !== null && n !== undefined) ? n.toFixed(2).replace(".",",") : "—"}
-function lab(k){return k==0?"Casa":k==1?"Empate":"Fora"}
-
-function btn(v,k,id){
- if(v===null || v===undefined) return '<button class="odd" disabled><span>'+lab(k)+'</span>—</button>';
- var key=id+"-"+k;
- return '<button class="odd'+(sel[key]?' sel':'')+'" data-k="'+key+'"><span>'+lab(k)+'</span>'+fmt(v)+'</button>';
-}
-
-function card(g,id,live){
- var two=g.o.length==3&&g.o[1]===null;
- var h='<article class="card"><div class="meta"><span>'+g.l+' • '+g.s+'</span>'+(live?'<span class="live">'+g.t+'</span>':'<span>'+g.t+'</span>')+'</div>';
- h+='<div class="tm"><span>'+g.a[0]+'</span><span>'+(g.a[1]!=null?g.a[1]:'')+'</span></div><div class="tm"><span>'+g.b[0]+'</span><span>'+(g.b[1]!=null?g.b[1]:'')+'</span></div>';
- h+='<div class="odds'+(two?' two':'')+'">';
- g.o.forEach(function(v,k){if(two&&k==1)return;h+=btn(v,k,id)});
- return h+'</div></article>';
-}
-
-function info(k){
-  var p=k.split("-"),m=p[0].match(/^([a-z]+)(\d*)$/),g=m[1]=="hero"?D.hero:D[m[1]][m[2]],i=+p[1];
-  return{g:g,i:i,odd:g.o[i]};
-}
-
-function render(){
- $("cats").innerHTML=D.cats.map(function(c,i){return '<button class="cat'+(i==0?' on':'')+'">'+c+'</button>'}).join("");
- 
- if (D.hero && D.hero.a) {
-   var titleEl = $("hero-title");
-   if (titleEl) titleEl.textContent = D.hero.a[0] + " x " + D.hero.b[0];
-   $("hero").innerHTML=D.hero.o.map(function(v,k){var key="hero-"+k;return '<button class="'+(sel[key]?'sel':'')+'" data-k="'+key+'"><span>'+lab(k)+'</span>'+fmt(v)+'</button>'}).join("");
- }
-
- ["live","next","esp"].forEach(function(k){
-   if ($(k)) $(k).innerHTML=D[k].map(function(g,i){return card(g,k+i,k=="live")}).join("");
- });
- renderSlip();
-}
-
-function renderSlip(){
- $("bal").textContent="Saldo: R$ "+fmt(bal);
- var keys=Object.keys(sel),h="";
- $("n").textContent=keys.length?keys.length+(keys.length>1?" seleções":" seleção"):"";
- if(!keys.length){h='<div class="empty"><b>Bilhete vazio</b>Toque em uma odd para adicionar a seleção.</div>'}
- else{
-  tot=1;
-  keys.forEach(function(k){
-    var x=info(k);
-    if(x.odd) tot*=x.odd;
-    var nm=x.i==0?x.g.a[0]:x.i==2?x.g.b[0]:"Empate";
-    h+='<div class="si"><b><span>'+nm+'</span><span>'+fmt(x.odd)+'<button class="rm" data-rm="'+k+'" aria-label="Remover seleção">×</button></span></b><small>'+x.g.a[0]+' x '+x.g.b[0]+'</small></div>';
-  });
-  h+='<div class="stake"><input id="st" type="number" min="1" step="1" placeholder="Valor da aposta (R$)" value="'+(window._st||"")+'"></div>';
-  h+='<div class="sum"><span>Odd total</span><span>'+fmt(tot)+'</span></div><div class="sum"><span>Retorno possível</span><span id="ret">R$ '+fmt((parseFloat(window._st)||0)*tot)+'</span></div>';
-  h+='<button class="place" id="place">Confirmar aposta</button>';
- }
- if(msg)h+='<p class="msg">'+msg+'</p>';
- $("slip").innerHTML=h;
- var inp=$("st");if(inp)inp.addEventListener("input",function(){window._st=inp.value;$("ret").textContent="R$ "+fmt((parseFloat(inp.value)||0)*tot)});
-}
-
-// =========================================================================
-// CONSULTA AO SEU PROXY DA VERCEL
-// =========================================================================
-async function fetchOddsData() {
-  try {
-    const res = await fetch(PROXY_URL + "?sport=soccer_epl&region=eu&markets=h2h");
-    if (!res.ok) throw new Error("Erro na requisição: " + res.statusText);
-    const data = await res.json();
-
-    if (!Array.isArray(data) || data.length === 0) {
-      console.log("Nenhum jogo retornado no momento.");
-      return;
-    }
-
-    D.next = [];
-
-    data.forEach((match, index) => {
-      let odds = [null, null, null];
-
-      if (match.bookmakers && match.bookmakers.length > 0) {
-        const h2hMarket = match.bookmakers[0].markets.find(m => m.key === "h2h");
-        if (h2hMarket) {
-          const home = h2hMarket.outcomes.find(o => o.name === match.home_team);
-          const draw = h2hMarket.outcomes.find(o => o.name === "Draw");
-          const away = h2hMarket.outcomes.find(o => o.name === match.away_team);
-
-          odds = [
-            home ? home.price : null,
-            draw ? draw.price : null,
-            away ? away.price : null
-          ];
-        }
-      }
-
-      const formattedMatch = {
-        l: match.sport_title || "Futebol",
-        s: "Futebol",
-        t: new Date(match.commence_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        a: [match.home_team],
-        b: [match.away_team],
-        o: odds
-      };
-
-      if (index === 0) {
-        D.hero = formattedMatch;
-      } else {
-        D.next.push(formattedMatch);
-      }
-    });
-
-    render();
-  } catch (err) {
-    console.error("Falha ao carregar odds via Proxy:", err);
-  }
-}
-
-document.addEventListener("click",function(e){
- var o=e.target.closest("[data-k]");
- if(o){var k=o.dataset.k,gid=k.split("-")[0];
-  Object.keys(sel).forEach(function(x){if(x.split("-")[0]==gid&&x!=k)delete sel[x]});
-  if(sel[k])delete sel[k];else sel[k]=1;
-  msg="";render();return}
- var r=e.target.closest("[data-rm]");
- if(r){delete sel[r.dataset.rm];msg="";render();return}
- if(e.target.id=="place"){
-  var v=parseFloat(window._st)||0;
-  if(v<1){msg="Informe um valor de pelo menos R$ 1,00."}
-  else if(v>bal){msg="Saldo de teste insuficiente."}
-  else{bal-=v;msg="Aposta de demonstração registrada: R$ "+fmt(v)+".";sel={};window._st=""}
-  render()}
-});
-
-render();
-fetchOddsData();
-</script>
+var bal = 8, sel = {}, msg = "", tot
