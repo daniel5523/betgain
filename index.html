@@ -1,0 +1,152 @@
+<script>
+// =========================================================================
+// CONFIGURAÇÃO DO SEU PROXY DA VERCEL
+// =========================================================================
+// Substitua pelo URL da sua função implantada na Vercel:
+const PROXY_URL = "https://betgain-proxy.vercel.app/api/odds";
+
+var D = {
+  cats: ["⚽ Futebol", "🏀 Basquete", "🎾 Tênis", "🥊 Lutas", "🎮 E-sports", "🏉 Rugby", "🏐 Vôlei", "🏎️ Automobilismo"],
+  hero: { a: ["A carregar..."], b: ["A carregar..."], o: [null, null, null] },
+  live: [],
+  next: [],
+  esp: []
+};
+
+var bal = 8, sel = {}, msg = "", tot = 1;
+var $ = function(i){return document.getElementById(i)};
+function fmt(n){return (n !== null && n !== undefined) ? n.toFixed(2).replace(".",",") : "—"}
+function lab(k){return k==0?"Casa":k==1?"Empate":"Fora"}
+
+function btn(v,k,id){
+ if(v===null || v===undefined) return '<button class="odd" disabled><span>'+lab(k)+'</span>—</button>';
+ var key=id+"-"+k;
+ return '<button class="odd'+(sel[key]?' sel':'')+'" data-k="'+key+'"><span>'+lab(k)+'</span>'+fmt(v)+'</button>';
+}
+
+function card(g,id,live){
+ var two=g.o.length==3&&g.o[1]===null;
+ var h='<article class="card"><div class="meta"><span>'+g.l+' • '+g.s+'</span>'+(live?'<span class="live">'+g.t+'</span>':'<span>'+g.t+'</span>')+'</div>';
+ h+='<div class="tm"><span>'+g.a[0]+'</span><span>'+(g.a[1]!=null?g.a[1]:'')+'</span></div><div class="tm"><span>'+g.b[0]+'</span><span>'+(g.b[1]!=null?g.b[1]:'')+'</span></div>';
+ h+='<div class="odds'+(two?' two':'')+'">';
+ g.o.forEach(function(v,k){if(two&&k==1)return;h+=btn(v,k,id)});
+ return h+'</div></article>';
+}
+
+function info(k){
+  var p=k.split("-"),m=p[0].match(/^([a-z]+)(\d*)$/),g=m[1]=="hero"?D.hero:D[m[1]][m[2]],i=+p[1];
+  return{g:g,i:i,odd:g.o[i]};
+}
+
+function render(){
+ $("cats").innerHTML=D.cats.map(function(c,i){return '<button class="cat'+(i==0?' on':'')+'">'+c+'</button>'}).join("");
+ 
+ if (D.hero && D.hero.a) {
+   var titleEl = $("hero-title");
+   if (titleEl) titleEl.textContent = D.hero.a[0] + " x " + D.hero.b[0];
+   $("hero").innerHTML=D.hero.o.map(function(v,k){var key="hero-"+k;return '<button class="'+(sel[key]?'sel':'')+'" data-k="'+key+'"><span>'+lab(k)+'</span>'+fmt(v)+'</button>'}).join("");
+ }
+
+ ["live","next","esp"].forEach(function(k){
+   if ($(k)) $(k).innerHTML=D[k].map(function(g,i){return card(g,k+i,k=="live")}).join("");
+ });
+ renderSlip();
+}
+
+function renderSlip(){
+ $("bal").textContent="Saldo: R$ "+fmt(bal);
+ var keys=Object.keys(sel),h="";
+ $("n").textContent=keys.length?keys.length+(keys.length>1?" seleções":" seleção"):"";
+ if(!keys.length){h='<div class="empty"><b>Bilhete vazio</b>Toque em uma odd para adicionar a seleção.</div>'}
+ else{
+  tot=1;
+  keys.forEach(function(k){
+    var x=info(k);
+    if(x.odd) tot*=x.odd;
+    var nm=x.i==0?x.g.a[0]:x.i==2?x.g.b[0]:"Empate";
+    h+='<div class="si"><b><span>'+nm+'</span><span>'+fmt(x.odd)+'<button class="rm" data-rm="'+k+'" aria-label="Remover seleção">×</button></span></b><small>'+x.g.a[0]+' x '+x.g.b[0]+'</small></div>';
+  });
+  h+='<div class="stake"><input id="st" type="number" min="1" step="1" placeholder="Valor da aposta (R$)" value="'+(window._st||"")+'"></div>';
+  h+='<div class="sum"><span>Odd total</span><span>'+fmt(tot)+'</span></div><div class="sum"><span>Retorno possível</span><span id="ret">R$ '+fmt((parseFloat(window._st)||0)*tot)+'</span></div>';
+  h+='<button class="place" id="place">Confirmar aposta</button>';
+ }
+ if(msg)h+='<p class="msg">'+msg+'</p>';
+ $("slip").innerHTML=h;
+ var inp=$("st");if(inp)inp.addEventListener("input",function(){window._st=inp.value;$("ret").textContent="R$ "+fmt((parseFloat(inp.value)||0)*tot)});
+}
+
+// =========================================================================
+// CONSULTA AO SEU PROXY DA VERCEL
+// =========================================================================
+async function fetchOddsData() {
+  try {
+    const res = await fetch(PROXY_URL + "?sport=soccer_epl&region=eu&markets=h2h");
+    if (!res.ok) throw new Error("Erro na requisição: " + res.statusText);
+    const data = await res.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log("Nenhum jogo retornado no momento.");
+      return;
+    }
+
+    D.next = [];
+
+    data.forEach((match, index) => {
+      let odds = [null, null, null];
+
+      if (match.bookmakers && match.bookmakers.length > 0) {
+        const h2hMarket = match.bookmakers[0].markets.find(m => m.key === "h2h");
+        if (h2hMarket) {
+          const home = h2hMarket.outcomes.find(o => o.name === match.home_team);
+          const draw = h2hMarket.outcomes.find(o => o.name === "Draw");
+          const away = h2hMarket.outcomes.find(o => o.name === match.away_team);
+
+          odds = [
+            home ? home.price : null,
+            draw ? draw.price : null,
+            away ? away.price : null
+          ];
+        }
+      }
+
+      const formattedMatch = {
+        l: match.sport_title || "Futebol",
+        s: "Futebol",
+        t: new Date(match.commence_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        a: [match.home_team],
+        b: [match.away_team],
+        o: odds
+      };
+
+      if (index === 0) {
+        D.hero = formattedMatch;
+      } else {
+        D.next.push(formattedMatch);
+      }
+    });
+
+    render();
+  } catch (err) {
+    console.error("Falha ao carregar odds via Proxy:", err);
+  }
+}
+
+document.addEventListener("click",function(e){
+ var o=e.target.closest("[data-k]");
+ if(o){var k=o.dataset.k,gid=k.split("-")[0];
+  Object.keys(sel).forEach(function(x){if(x.split("-")[0]==gid&&x!=k)delete sel[x]});
+  if(sel[k])delete sel[k];else sel[k]=1;
+  msg="";render();return}
+ var r=e.target.closest("[data-rm]");
+ if(r){delete sel[r.dataset.rm];msg="";render();return}
+ if(e.target.id=="place"){
+  var v=parseFloat(window._st)||0;
+  if(v<1){msg="Informe um valor de pelo menos R$ 1,00."}
+  else if(v>bal){msg="Saldo de teste insuficiente."}
+  else{bal-=v;msg="Aposta de demonstração registrada: R$ "+fmt(v)+".";sel={};window._st=""}
+  render()}
+});
+
+render();
+fetchOddsData();
+</script>
